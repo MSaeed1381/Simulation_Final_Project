@@ -100,7 +100,7 @@ def draw_degree_distribution(graph):
 
     # Plotting the histogram
     n, bins, patches = plt.hist(degrees, 60, density=1, edgecolor='black', alpha=0.5)
-
+    
     # Customizing the plot
     plt.xlabel('Degree')
     plt.ylabel('Frequency')
