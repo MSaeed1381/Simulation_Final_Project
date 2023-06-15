@@ -7,7 +7,7 @@ import random
 from scipy.stats import norm
 import scipy
 import sys
-
+import seaborn as sns
 
 sys.setrecursionlimit(10000)
 
@@ -95,20 +95,28 @@ def laplacian_energy(graph):
 
 
 def draw_degree_distribution(graph):
-    # Get the degrees of nodes
     degrees = [d for n, d in graph.degree()]
+    sns.displot(degrees, kde=True, color="black")
 
-    # Plotting the histogram
-    n, bins, patches = plt.hist(degrees, 60, density=1, edgecolor='black', alpha=0.5)
-    
-    # Customizing the plot
-    plt.xlabel('Degree')
-    plt.ylabel('Frequency')
-    plt.title('Degree Distribution')
+    plt.xlabel("degree")
+    plt.ylabel("frequency")
+    plt.title("Degree Distribution")
 
-    # Display the plot
-    # plt.legend()
-    plt.show()
+
+def draw_eigen_values_distribution(graph):
+    sns.displot(adjacency_eigen_values(graph), kde=True, color="black")
+
+    plt.xlabel("eigen value")
+    plt.ylabel("frequency")
+    plt.title("Eigen Values Distribution")
+
+
+def draw_distribution(data, name):
+    sns.displot(data, kde=True, color="black")
+
+    plt.xlabel(name)
+    plt.ylabel("frequency")
+    plt.title(f"{name} Distribution")
 
 
 def RSRBG(n, d1, d2):
@@ -207,3 +215,21 @@ def RSRG(p, n, d1, d2):
             limit -= 1
 
     return rsrg_graph, color_map
+
+
+def calculate_statistics_parameters(data):
+    print(f"mean is {np.mean(data)}")
+    print(f"standard deviation is {np.std(data)}")
+    e = (1.96 * np.std(data)) / math.sqrt(len(data))
+    print(f"CI is {(np.mean(data) - e), np.mean(data) + e}")
+    plt.boxplot(data)
+
+
+def complex_abs(a):
+    res = []
+    for x in a:
+        if x > 0:
+            res.append(np.abs(x))
+        else:
+            res.append(-np.abs(x))
+    return res
