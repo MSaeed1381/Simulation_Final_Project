@@ -218,11 +218,16 @@ def RSRG(p, n, d1, d2):
 
 
 def calculate_statistics_parameters(data):
-    print(f"mean is {np.mean(data)}")
-    print(f"standard deviation is {np.std(data)}")
+    mean, std = np.mean(data), np.std(data)
+    print(f"mean is {mean}")
+    print(f"standard deviation is {std}")
     e = (1.96 * np.std(data)) / math.sqrt(len(data))
-    print(f"CI is {(np.mean(data) - e), np.mean(data) + e}")
+    ci = (np.mean(data) - e), np.mean(data) + e
+    print(f"CI is {ci}")
     plt.boxplot(data)
+    plt.ylabel("box plot")
+    plt.title("values box plot")
+    return mean, std, e, ci
 
 
 def complex_abs(a):
@@ -233,3 +238,60 @@ def complex_abs(a):
         else:
             res.append(-np.abs(x))
     return res
+
+
+def box_plot(data, index, title):
+    # Creating dataset
+    np.random.seed(10)
+
+    fig = plt.figure(figsize=(10, 7))
+    ax = fig.add_subplot(111)
+
+    # Creating axes instance
+    bp = ax.boxplot(data, patch_artist=True,
+                    notch='True', vert=0)
+
+    colors = ['#0000FF', '#00FF00',
+              '#FFFF00', '#FF00FF']
+
+    for patch, color in zip(bp['boxes'], colors):
+        patch.set_facecolor(color)
+
+    # changing color and linewidth of
+    # whiskers
+    for whisker in bp['whiskers']:
+        whisker.set(color='#8B008B',
+                    linewidth=1.5,
+                    linestyle=":")
+
+    # changing color and linewidth of
+    # caps
+    for cap in bp['caps']:
+        cap.set(color='#8B008B',
+                linewidth=2)
+
+    # changing color and linewidth of
+    # medians
+    for median in bp['medians']:
+        median.set(color='red',
+                   linewidth=3)
+
+    # changing style of fliers
+    for flier in bp['fliers']:
+        flier.set(marker='D',
+                  color='#e7298a',
+                  alpha=0.5)
+
+    # x-axis labels
+    ax.set_yticklabels(index)
+
+    # Adding title
+    plt.title(title)
+
+    # Removing top axes and right axes
+    # ticks
+    ax.get_xaxis().tick_bottom()
+    ax.get_yaxis().tick_left()
+
+    # show plot
+    plt.show()
