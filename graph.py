@@ -51,6 +51,7 @@ def spectral_gap(graph):
 def algebraic_connectivity(graph):
     eigenvalues = laplacian_eigen_values(graph)
     eigenvalues.sort()
+
     return abs(np.round(abs(eigenvalues[1]), 10))
 
 
