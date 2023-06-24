@@ -35,7 +35,7 @@ def laplacian_eigen_vectors(graph):
 def spectral_radius(graph):
     eigenvalues = adjacency_eigen_values(graph)
     eigenvalues.sort()
-    return np.round(eigenvalues[-1], 10)
+    return np.round(abs(eigenvalues[-1]), 10)
 
 
 def spectral_gap(graph):
@@ -43,7 +43,7 @@ def spectral_gap(graph):
     eigenvalues.sort()
 
     if len(eigenvalues) >= 2:
-        return np.round(eigenvalues[-1] - eigenvalues[-2], 10)
+        return abs(np.round(eigenvalues[-1] - eigenvalues[-2], 10))
 
     return 0
 
@@ -51,7 +51,7 @@ def spectral_gap(graph):
 def algebraic_connectivity(graph):
     eigenvalues = laplacian_eigen_values(graph)
     eigenvalues.sort()
-    return abs(np.round(eigenvalues[1], 10))
+    return abs(np.round(abs(eigenvalues[1]), 10))
 
 
 def natural_connectivity(graph):
@@ -60,17 +60,23 @@ def natural_connectivity(graph):
     eig_sum = 0
     n = len(eigenvalues)
     for eig in eigenvalues:
-        eig_sum += math.exp(eig) / n
+        if eig > 0:
+            aeig = abs(eig)
+        else:
+            aeig = -abs(eig)
 
-    return np.round(np.log(eig_sum), 10)
+        eig_sum += math.exp(aeig) / n
+
+    return np.round(np.log(abs(eig_sum)), 10)
 
 
 def symmetry_ratio(graph):
     if not nx.is_connected(graph):
-        return 0  # TODO
+        d = nx.global_efficiency(graph)
+    else:
+        d = nx.diameter(graph)
 
-    d = nx.diameter(graph)
-    e = len(set(adjacency_eigen_values(graph)))
+    e = len(set(np.round(complex_abs(adjacency_eigen_values(graph)), 10)))
     return e / (d + 1)
 
 
