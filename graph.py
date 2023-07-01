@@ -12,6 +12,15 @@ import seaborn as sns
 sys.setrecursionlimit(10000)
 
 
+def degree_distribution_pdf(graph):
+    degrees = [graph.degree(node) for node in graph.nodes()]
+    degree_counts = nx.degree_histogram(graph)
+
+    pdf = [count / float(sum(degree_counts)) for count in degree_counts]
+
+    return pdf
+
+
 def adjacency_eigen_values(graph):
     adj_matrix = nx.adjacency_matrix(graph).toarray()
     return np.linalg.eig(adj_matrix)[0]
